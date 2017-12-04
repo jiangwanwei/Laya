@@ -10,7 +10,7 @@ var GameMain = /** @class */ (function () {
         Laya.stage.bgColor = '#e16339';
         Laya.Stat.show();
         // 设置适配
-        Laya.stage.scaleMode = LayaStage.SCALE_FIXED_AUTO;
+        Laya.stage.scaleMode = LayaStage.SCALE_SHOWALL;
         Laya.stage.alignH = LayaStage.ALIGN_CENTER;
         Laya.stage.screenMode = LayaStage.SCREEN_VERTICAL;
         // 进入游戏显示加载进度
