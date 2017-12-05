@@ -17,6 +17,8 @@ var GameView = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         // 卡牌数量
         _this.cardNum = 9;
+        // 奖励列表
+        _this.awardData = { 2: '积分 x 1', 3: '积分 x 3', 4: '积分 x 5', 5: '百瑞蛋糕1榜', 6: '娜可露露蛋糕1榜', 7: '越慢玫瑰蛋糕1榜' };
         _this.updateChanceNum();
         _this.reset();
         // 卡牌绑定点击事件
@@ -27,7 +29,6 @@ var GameView = /** @class */ (function (_super) {
     GameView.prototype.reset = function () {
         // 设置舞台背景颜色
         Laya.stage.bgColor = '#ff5529';
-        GameView.isAllow = true;
         this.initCardListAnimate();
     };
     // 初始化卡牌 (发牌动画)
@@ -61,8 +62,10 @@ var GameView = /** @class */ (function (_super) {
             }
             Laya.Tween.to(this.cardList.getCell(i), _props, 200, Laya.Ease.bounceInOut, null, i * 100);
         }
-        // 动画执行完毕开启点击
-        Laya.timer.once(this.cardNum * 100, null, function () { return GameView.isAllow = true; });
+        // 所有动画执行完毕开启点击事件
+        Laya.timer.once(this.cardNum * 100, null, function () {
+            GameView.isAllow = true;
+        });
         // 设置List数据源
         this.cardList.dataSource = dataSource;
     };
@@ -116,15 +119,30 @@ var GameView = /** @class */ (function (_super) {
             dataSource.push(_data);
         }
         this.cardList.dataSource = dataSource;
-        // Laya.timer.once(300, this, this.showResult);
+        Laya.timer.once(300, this, this.showResult);
     };
     // 显示结果弹窗
     GameView.prototype.showResult = function () {
-        var dlg = new MyDialog('恭喜你获得', function () {
-            console.log('去顶');
+        var _this = this;
+        var _restxt = '恭 喜 您 获 得';
+        if (this.curAwardType === 1)
+            _restxt = '\n 运气不佳，差一点点~ \n \n 再接再厉！';
+        var dlg = new MyDialog(_restxt, function () {
+            dlg.close();
+            _this.reset();
         });
-        dlg.popup(true);
-        this.addChild(dlg);
+        var dlgManager = new Laya.DialogManager();
+        if (this.curAwardType === 1) {
+            dlg.awardImg.removeSelf();
+            dlg.confim.y = 260;
+        }
+        else {
+            dlg.awardImg.skin = "ui/award_" + this.curAwardType + ".png";
+            dlg.confim.y = 290;
+        }
+        dlgManager.closeEffectHandler = null; // 关闭默认dialog关闭效果
+        dlgManager.open(dlg);
+        this.addChild(dlgManager);
     };
     // 游戏次数
     GameView.chanceNum = 5;

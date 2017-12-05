@@ -12,7 +12,8 @@ class GameView extends ui.GameViewUI {
     private cardNum: number = 9;
     // 当前获得奖励类型
     private curAwardType: number;
-
+    // 奖励列表
+    private awardData: Object = {2: '积分 x 1', 3: '积分 x 3', 4: '积分 x 5', 5: '百瑞蛋糕1榜', 6: '娜可露露蛋糕1榜', 7: '越慢玫瑰蛋糕1榜'};
     constructor() {
         super();
         this.updateChanceNum();
@@ -25,7 +26,6 @@ class GameView extends ui.GameViewUI {
     reset():void {
         // 设置舞台背景颜色
         Laya.stage.bgColor = '#ff5529';
-        GameView.isAllow = true;
         this.initCardListAnimate();
     }
     // 初始化卡牌 (发牌动画)
@@ -51,8 +51,10 @@ class GameView extends ui.GameViewUI {
 
             Laya.Tween.to(this.cardList.getCell(i), _props, 200, Laya.Ease.bounceInOut, null, i * 100);
         }
-        // 动画执行完毕开启点击
-        Laya.timer.once(this.cardNum * 100, null, () => GameView.isAllow = true);
+        // 所有动画执行完毕开启点击事件
+        Laya.timer.once(this.cardNum * 100, null, () => {
+            GameView.isAllow = true;
+        });
         // 设置List数据源
         this.cardList.dataSource = dataSource;
     }
@@ -107,15 +109,29 @@ class GameView extends ui.GameViewUI {
             dataSource.push(_data);
         }
         this.cardList.dataSource = dataSource;
-        // Laya.timer.once(300, this, this.showResult);
+        Laya.timer.once(300, this, this.showResult);
     }
     // 显示结果弹窗
     showResult():void {
-
-        var dlg:MyDialog = new MyDialog('恭喜你获得', () => {
-            console.log('...')
+        var _restxt:string = '恭 喜 您 获 得';
+        if (this.curAwardType === 1)  _restxt = '\n 运气不佳，差一点点~ \n \n 再接再厉！';
+        var dlg:MyDialog = new MyDialog(_restxt, () => {
+            dlg.close();
+            this.reset();
         });
-        dlg.popup(true);
-        this.addChild(dlg);
+        var dlgManager:Laya.DialogManager = new Laya.DialogManager();
+        if (this.curAwardType === 1) {
+            dlg.awardImg.removeSelf();
+            dlg.confim.y = 260;
+        } else {
+            dlg.awardImg.skin = `ui/award_${this.curAwardType}.png`;
+            dlg.confim.y = 290;
+        }
+        // dlg.popup(true);
+        dlg.closeEffect = null;   // 关闭默认dialog关闭效果
+        // var mask:Laya.Sprite = new Laya.Sprite();
+        // dlgManager.maskLayer = mask;
+        dlgManager.open(dlg);
+        this.addChild(dlgManager);
     }
 }

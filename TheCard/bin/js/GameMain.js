@@ -7,7 +7,7 @@ var GameMain = /** @class */ (function () {
         // 优先使用webgl渲染，不支持会自动使用canvas
         Laya.init(640, 1009, Laya.WebGL);
         // 设置背景颜色  用于显示 loading...
-        Laya.stage.bgColor = '#e16339';
+        Laya.stage.bgColor = '#ff5529';
         // 性能监控
         // Laya.Stat.show();
         // 底部要加   技术支持： 迈小步科技
@@ -52,7 +52,7 @@ var GameMain = /** @class */ (function () {
     GameMain.prototype.onLoadComplete = function () {
         var _this = this;
         this.loadingTxt.text = "loading(100%)...";
-        Laya.Tween.to(this.loadingTxt, { alpha: 0 }, 200, Laya.Ease.bounceInOut, Hander.create(null, function () {
+        Laya.Tween.to(this.loadingTxt, { alpha: 0 }, 300, Laya.Ease.bounceInOut, Hander.create(null, function () {
             _this.loadingTxt.visible = false;
             _this.loadingTxt.removeSelf();
             _this.loadingTxt.destroy();

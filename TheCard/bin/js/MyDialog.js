@@ -15,12 +15,11 @@ var MyDialog = /** @class */ (function (_super) {
     __extends(MyDialog, _super);
     function MyDialog(txt, callback) {
         var _this = _super.call(this) || this;
-        _this.tipTxt = txt;
-        _this.btnCallbackHd = callback;
+        _this.context.text = txt;
         // 关闭按钮事件
         _this.btn_close.on(Laya.Event.CLICK, _this, _this.close);
         // 确定按钮事件
-        _this.confim.on(Laya.Event.CLICK, _this, _this.btnCallbackHd);
+        _this.confim.on(Laya.Event.CLICK, _this, callback);
         return _this;
     }
     return MyDialog;

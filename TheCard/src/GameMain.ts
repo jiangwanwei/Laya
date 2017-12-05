@@ -17,7 +17,7 @@ class GameMain{
         Laya.init(640, 1009, Laya.WebGL);
 
         // 设置背景颜色  用于显示 loading...
-        Laya.stage.bgColor = '#e16339';
+        Laya.stage.bgColor = '#ff5529';
 
         // 性能监控
         // Laya.Stat.show();
@@ -65,7 +65,7 @@ class GameMain{
     // 加载游戏资源完成
     onLoadComplete():void {
         this.loadingTxt.text = `loading(100%)...`;
-        Laya.Tween.to(this.loadingTxt, {alpha: 0}, 200, Laya.Ease.bounceInOut, Hander.create(null, () => {
+        Laya.Tween.to(this.loadingTxt, {alpha: 0}, 300, Laya.Ease.bounceInOut, Hander.create(null, () => {
             this.loadingTxt.visible = false;
             this.loadingTxt.removeSelf();
             this.loadingTxt.destroy();
