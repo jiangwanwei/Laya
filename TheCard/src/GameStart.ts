@@ -17,6 +17,8 @@ class GameStart extends ui.IndexUI {
         this.btn_close_award.on(Laya.Event.MOUSE_DOWN, this, this.setRuleState(false, this.my_award));
         this.setDefaultProp(this.my_award); 
         
+        // 点击开始
+        this.btn_bigin.on(Laya.Event.MOUSE_DOWN, this, this.beginHandle)
     }
     // 设置规则默认属性
     setDefaultProp(target: Laya.Image):void {
@@ -30,6 +32,8 @@ class GameStart extends ui.IndexUI {
     // 显示隐藏 规则
     setRuleState(state: boolean, target: Laya.Image):any {
         return ():any => {
+            this.rule.visible = false;
+            this.my_award.visible = false;
             if (state) {
                 var prop = {
                     scaleX: 1,
@@ -42,5 +46,14 @@ class GameStart extends ui.IndexUI {
             }
             this.setDefaultProp(target);            
         }
+    }
+    // 开始游戏
+    beginHandle():void {        
+        this.removeSelf();
+        if (!GameMain.GameView) {
+            GameMain.GameView = new GameView();
+        }
+        GameMain.GameView.reset();
+        Laya.stage.addChild(GameMain.GameView);
     }
 }

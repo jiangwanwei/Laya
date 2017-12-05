@@ -2,8 +2,8 @@
     "x":0,
     "type":"Dialog",
     "selectedBox":1,
-    "selecteID":4,
-    "props":{"width":579,"sceneColor":"#000000","height":200},
+    "selecteID":7,
+    "props":{"width":560,"sceneColor":"#000000","height":400},
     "nodeParent":-1,
     "label":"Dialog",
     "isOpen":true,
@@ -15,7 +15,7 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":0,"x":0,"width":579,"visible":false,"skin":"ui/dialog-bg.png","sizeGrid":"57,54,16,15","height":200},
+            "props":{"y":0,"x":0,"width":560,"visible":false,"skin":"ui/dialog-bg.png","sizeGrid":"57,54,16,15","height":400},
             "nodeParent":1,
             "label":"Image",
             "isOpen":true,
@@ -31,13 +31,39 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":11,"x":528,"width":45,"var":"btn_close","styleSkin":"ui/label.png","height":48},
+            "props":{"y":16,"x":512,"width":33,"var":"btn_close","styleSkin":"ui/label.png","height":31},
             "nodeParent":1,
             "label":"Label(btn_close)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
-            "compId":4,
+            "compId":6,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Button",
+            "props":{"y":285,"x":75,"var":"confim","stateNum":"1","skin":"ui/btn_share.png"},
+            "nodeParent":1,
+            "label":"Button(confim)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "compId":7,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Label",
+            "props":{"y":95,"x":98,"width":356,"var":"context","text":"label","styleSkin":"ui/label.png","height":138,"fontSize":30,"color":"#ff643c","align":"center"},
+            "nodeParent":1,
+            "label":"Label(context)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "compId":8,
             "child":[
                 ]
         }],

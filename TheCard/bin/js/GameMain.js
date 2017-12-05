@@ -8,7 +8,9 @@ var GameMain = /** @class */ (function () {
         Laya.init(640, 1009, Laya.WebGL);
         // 设置背景颜色  用于显示 loading...
         Laya.stage.bgColor = '#e16339';
-        Laya.Stat.show();
+        // 性能监控
+        // Laya.Stat.show();
+        // 底部要加   技术支持： 迈小步科技
         // 设置适配
         Laya.stage.scaleMode = LayaStage.SCALE_SHOWALL;
         Laya.stage.alignH = LayaStage.ALIGN_CENTER;
@@ -60,8 +62,8 @@ var GameMain = /** @class */ (function () {
     // 加载游戏开始界面
     GameMain.prototype.loadGameStart = function () {
         // 添加开始界面
-        var gameStar = new GameStart();
-        Laya.stage.addChild(gameStar);
+        GameMain.GameStart = new GameStart();
+        Laya.stage.addChild(GameMain.GameStart);
     };
     return GameMain;
 }());

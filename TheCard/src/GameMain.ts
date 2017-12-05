@@ -7,10 +7,10 @@ import Hander = Laya.Handler;
 class GameMain{
     // loading 文字
     private loadingTxt: Laya.Text;
-
-    public GameStart: GameStart;
-    public GameView: any;
-    public GameEnd: any;
+    // 游戏开始界面
+    public static GameStart: GameStart;
+    // 游戏主界面
+    public static GameView: GameView;
 
     constructor() {
         // 优先使用webgl渲染，不支持会自动使用canvas
@@ -19,7 +19,9 @@ class GameMain{
         // 设置背景颜色  用于显示 loading...
         Laya.stage.bgColor = '#e16339';
 
-        Laya.Stat.show();
+        // 性能监控
+        // Laya.Stat.show();
+        // 底部要加   技术支持： 迈小步科技
 
         // 设置适配
         Laya.stage.scaleMode = LayaStage.SCALE_SHOWALL;
@@ -74,8 +76,8 @@ class GameMain{
     // 加载游戏开始界面
     loadGameStart():void {
         // 添加开始界面
-        var gameStar: GameStart = new GameStart();
-        Laya.stage.addChild(gameStar);
+        GameMain.GameStart = new GameStart();
+        Laya.stage.addChild(GameMain.GameStart);
     }
 }
 new GameMain();

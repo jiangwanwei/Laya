@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":17,
-    "selecteID":22,
+    "selectedBox":1,
+    "selecteID":17,
     "props":{"width":640,"sceneColor":"#000000","sceneBg":"laya/views/Index.jpg","height":1009},
     "nodeParent":-1,
     "label":"View",
@@ -186,14 +186,13 @@
             "props":{"y":116,"x":48,"width":568,"var":"my_award","skin":"ui/dialog-bg.png","height":847},
             "nodeParent":1,
             "label":"Image(my_award)",
-            "isOpen":true,
+            "isOpen":false,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":17,
             "child":[
                 {
-                    "x":30,
                     "type":"Image",
                     "props":{"y":49,"x":34,"skin":"ui/my-award-title.png"},
                     "nodeParent":17,
@@ -208,7 +207,6 @@
                     "$LOCKED":true
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "props":{"y":729,"x":29,"skin":"ui/my-award-rule.png"},
                     "nodeParent":17,
@@ -222,7 +220,6 @@
                     "$LOCKED":true
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "props":{"y":664,"x":119,"skin":"ui/my-award-btn.png"},
                     "nodeParent":17,
@@ -236,7 +233,6 @@
                     "$LOCKED":true
                 },
                 {
-                    "x":30,
                     "type":"Label",
                     "props":{"y":5,"x":512,"width":50,"var":"btn_close_award","styleSkin":"ui/label.png","height":54},
                     "nodeParent":17,
@@ -248,7 +244,8 @@
                     "child":[
                         ]
                 }],
-            "$LOCKED":true
+            "$LOCKED":true,
+            "$HIDDEN":true
         }],
     "animations":[
         {

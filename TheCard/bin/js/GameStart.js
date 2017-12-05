@@ -25,6 +25,8 @@ var GameStart = /** @class */ (function (_super) {
         // 绑定隐藏我奖励事件
         _this.btn_close_award.on(Laya.Event.MOUSE_DOWN, _this, _this.setRuleState(false, _this.my_award));
         _this.setDefaultProp(_this.my_award);
+        // 点击开始
+        _this.btn_bigin.on(Laya.Event.MOUSE_DOWN, _this, _this.beginHandle);
         return _this;
     }
     // 设置规则默认属性
@@ -40,6 +42,8 @@ var GameStart = /** @class */ (function (_super) {
     GameStart.prototype.setRuleState = function (state, target) {
         var _this = this;
         return function () {
+            _this.rule.visible = false;
+            _this.my_award.visible = false;
             if (state) {
                 var prop = {
                     scaleX: 1,
@@ -52,6 +56,15 @@ var GameStart = /** @class */ (function (_super) {
             }
             _this.setDefaultProp(target);
         };
+    };
+    // 开始游戏
+    GameStart.prototype.beginHandle = function () {
+        this.removeSelf();
+        if (!GameMain.GameView) {
+            GameMain.GameView = new GameView();
+        }
+        GameMain.GameView.reset();
+        Laya.stage.addChild(GameMain.GameView);
     };
     return GameStart;
 }(ui.IndexUI));

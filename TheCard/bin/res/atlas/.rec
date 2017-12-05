@@ -34,8 +34,22 @@ P 7E990267 vscroll.png
 P E466EB1C vslider$bar.png
 P 2BFF7046 vslider.png
 D ui
+P 53FE7D08 avatar.png
+P 2192CF92 award_1.png
+P 02B14B81 award_2.png
+P 3CA66ABE award_3.png
+P CD821D71 award_4.png
+P 3F664B1F award_5.png
+P DFE7A183 award_6.png
+P 118EBE05 award_7.png
 P 14278263 begin_btn.png.png
+P 30AAE3CC btn_share.png
+P B55EE9FE card-bg.png
+R 71FC430C card_init.jpg
+P 91D34DC2 chance-bg.png
+R B162BF6C clip_num.png
 P 38D35334 dialog-bg.png
+R B8CA4163 game-view-bg.jpg
 R DFEF330F grid-bg.jpg
 R 46A76075 gril.png
 P 5EDC128C label.png
@@ -47,7 +61,7 @@ R 6DD8322F rule-txt.png
 P 51C2F1E8 rule_btn.png
 R 08DAF68C tip-bg.jpg
 R 1EA011FA title.png
-P 4EF80AA7 top-bg.png
+P 090D1C46 top-bg.png
 P 52107B89 vscroll$bar.png
 P E26B933E vscroll$down.png
 P B9680947 vscroll$up.png

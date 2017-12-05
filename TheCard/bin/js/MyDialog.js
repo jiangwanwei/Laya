@@ -13,18 +13,16 @@ var __extends = (this && this.__extends) || (function () {
  */
 var MyDialog = /** @class */ (function (_super) {
     __extends(MyDialog, _super);
-    function MyDialog(_w, _h) {
+    function MyDialog(txt, callback) {
         var _this = _super.call(this) || this;
-        _this.width = _w;
-        _this.height = _h;
-        // this.context = _context;
-        _this.init();
+        _this.tipTxt = txt;
+        _this.btnCallbackHd = callback;
+        // 关闭按钮事件
         _this.btn_close.on(Laya.Event.CLICK, _this, _this.close);
+        // 确定按钮事件
+        _this.confim.on(Laya.Event.CLICK, _this, _this.btnCallbackHd);
         return _this;
     }
-    MyDialog.prototype.init = function () {
-        // this.pos((Laya.stage.width - this.width) / 2, (Laya.stage.height - this.height) / 2);
-    };
     return MyDialog;
 }(ui.MyDialogUI));
 //# sourceMappingURL=MyDialog.js.map

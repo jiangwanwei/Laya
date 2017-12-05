@@ -12,6 +12,21 @@ var View = laya.ui.View;
 var Dialog = laya.ui.Dialog;
 var ui;
 (function (ui) {
+    var GameViewUI = /** @class */ (function (_super) {
+        __extends(GameViewUI, _super);
+        function GameViewUI() {
+            return _super.call(this) || this;
+        }
+        GameViewUI.prototype.createChildren = function () {
+            _super.prototype.createChildren.call(this);
+            this.createView(ui.GameViewUI.uiView);
+        };
+        GameViewUI.uiView = { "type": "View", "props": { "width": 640, "height": 1009 }, "child": [{ "type": "Box", "props": { "y": 0, "x": 0 }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "skin": "ui/game-view-bg.jpg" } }, { "type": "Image", "props": { "y": 0, "x": 0, "width": 640, "skin": "ui/top-bg.png", "height": 62, "sizeGrid": "0,0,0,0,1" } }, { "type": "Image", "props": { "y": 119, "x": 340, "skin": "ui/chance-bg.png" } }, { "type": "Image", "props": { "y": 87, "x": 114, "skin": "ui/avatar.png" } }] }, { "type": "Clip", "props": { "y": 118, "x": 401, "width": 56, "var": "chanceNum", "skin": "ui/clip_num.png", "index": 0, "height": 60, "clipX": 9, "clipWidth": 56 } }, { "type": "List", "props": { "y": 245, "x": 5, "width": 630, "var": "cardList", "spaceY": 7, "spaceX": 7, "repeatY": 3, "repeatX": 3, "height": 748 }, "child": [{ "type": "Box", "props": { "y": 0, "x": 0, "width": 206, "name": "render", "height": 245 }, "child": [{ "type": "Image", "props": { "skin": "ui/card-bg.png" } }, { "type": "Image", "props": { "y": 50, "x": 102, "skin": "ui/card_init.jpg", "name": "card", "anchorX": 0.5 } }] }] }] };
+        return GameViewUI;
+    }(View));
+    ui.GameViewUI = GameViewUI;
+})(ui || (ui = {}));
+(function (ui) {
     var IndexUI = /** @class */ (function (_super) {
         __extends(IndexUI, _super);
         function IndexUI() {
@@ -36,7 +51,7 @@ var ui;
             _super.prototype.createChildren.call(this);
             this.createView(ui.MyDialogUI.uiView);
         };
-        MyDialogUI.uiView = { "type": "Dialog", "props": { "width": 579, "height": 200 }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "width": 579, "visible": false, "skin": "ui/dialog-bg.png", "sizeGrid": "57,54,16,15", "height": 200 } }, { "type": "Label", "props": { "y": 11, "x": 528, "width": 45, "var": "btn_close", "height": 48 } }] };
+        MyDialogUI.uiView = { "type": "Dialog", "props": { "width": 560, "height": 400 }, "child": [{ "type": "Image", "props": { "y": 0, "x": 0, "width": 560, "visible": false, "skin": "ui/dialog-bg.png", "sizeGrid": "57,54,16,15", "height": 400 } }, { "type": "Label", "props": { "y": 16, "x": 512, "width": 33, "var": "btn_close", "height": 31 } }, { "type": "Button", "props": { "y": 285, "x": 75, "var": "confim", "stateNum": 1, "skin": "ui/btn_share.png" } }, { "type": "Label", "props": { "y": 95, "x": 98, "width": 356, "var": "context", "text": "label", "height": 138, "fontSize": 30, "color": "#ff643c", "align": "center" } }] };
         return MyDialogUI;
     }(Dialog));
     ui.MyDialogUI = MyDialogUI;
