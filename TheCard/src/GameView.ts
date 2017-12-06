@@ -2,13 +2,15 @@
  * 游戏主界面
  */
 class GameView extends ui.GameViewUI {
-    // 游戏次数
+    // 今日游戏次数
     public static chanceNum: number = 5;
+    // 总游戏次数
+    public static historyChanceNum: number = 100;
     // 是否关注
     public static isFollow: boolean = true;
     // 是否分享过
     public static isShared: boolean = false;
-    // 是否允许翻盘
+    // 是否允许翻牌
     public static isAllow: boolean = false;
     // 当前选中牌的index
     private curIndex: number;
@@ -31,6 +33,8 @@ class GameView extends ui.GameViewUI {
     reset():void {
         // 设置舞台背景颜色
         Laya.stage.bgColor = '#ff5529';
+        document.body.style.background = '#ff5529';
+        GameView.isAllow = false;
         this.initCardListAnimate();
     }
     // 初始化卡牌 (发牌动画)
@@ -65,15 +69,11 @@ class GameView extends ui.GameViewUI {
     }
     // 更新次数
     private updateChanceNum():void {
-        this.chanceNum.index = GameView.chanceNum;
+        this.chanceNumClip.index = GameView.chanceNum;
     }
     // 开始翻盘
     private cardSelect(e:Laya.Event, index: number):void {
-        if (!GameView.isAllow) return;
-        if (GameView.chanceNum <= 0) {
-            // 显示机会用完
-            return;
-        }
+        if (!GameView.isAllow || !this.GameStateCheck()) return;
         e.stopPropagation();
         if (e.type === 'mousedown') {
             GameView.isAllow = false;
@@ -158,7 +158,6 @@ class GameView extends ui.GameViewUI {
             // 显示分享提示层
             dlg.close();
             GameView.showHtmlTip('share-model');
-            this.reset();
         });
         dlg.confim.skin = 'ui/btn_share.png';
         dlg.txtImg.skin = 'ui/nochance_txt.png';
@@ -174,7 +173,7 @@ class GameView extends ui.GameViewUI {
         });
         dlg.confim.y = 260;
         dlg.popup(true);
-        // dlg.confim.skin = 'ui/btn_follow.png';
+        dlg.confim.skin = 'ui/btn_follow.png';
         Laya.stage.addChild(dlg);
     }
     // 今天没有翻盘机会了
@@ -190,5 +189,9 @@ class GameView extends ui.GameViewUI {
     // 显示html 提示层   （提示分享 、 提示关注）
     public static showHtmlTip(_id: string):void {
         document.getElementById(_id).style.display = 'block';
+    }
+    // 随机数
+    private getRandom():any {
+        return Math.ceil(Math.random() * 9);
     }
 }

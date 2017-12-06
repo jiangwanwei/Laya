@@ -19,6 +19,7 @@ class GameStart extends ui.IndexUI {
         
         // 点击开始
         this.btn_bigin.on(Laya.Event.MOUSE_DOWN, this, this.beginHandle)
+        document.body.style.background = '#f57747';
     }
     // 设置规则默认属性
     setDefaultProp(target: Laya.Image):void {

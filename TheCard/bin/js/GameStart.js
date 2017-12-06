@@ -27,6 +27,7 @@ var GameStart = /** @class */ (function (_super) {
         _this.setDefaultProp(_this.my_award);
         // 点击开始
         _this.btn_bigin.on(Laya.Event.MOUSE_DOWN, _this, _this.beginHandle);
+        document.body.style.background = '#f57747';
         return _this;
     }
     // 设置规则默认属性

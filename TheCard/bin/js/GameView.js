@@ -29,6 +29,8 @@ var GameView = /** @class */ (function (_super) {
     GameView.prototype.reset = function () {
         // 设置舞台背景颜色
         Laya.stage.bgColor = '#ff5529';
+        document.body.style.background = '#ff5529';
+        GameView.isAllow = false;
         this.initCardListAnimate();
     };
     // 初始化卡牌 (发牌动画)
@@ -75,12 +77,8 @@ var GameView = /** @class */ (function (_super) {
     };
     // 开始翻盘
     GameView.prototype.cardSelect = function (e, index) {
-        if (!GameView.isAllow)
+        if (!GameView.isAllow || !this.GameStateCheck())
             return;
-        if (GameView.chanceNum <= 0) {
-            // 显示机会用完
-            return;
-        }
         e.stopPropagation();
         if (e.type === 'mousedown') {
             GameView.isAllow = false;
@@ -178,13 +176,14 @@ var GameView = /** @class */ (function (_super) {
     };
     // 提示关注弹窗
     GameView.prototype.haveToFollow = function () {
-        var _restxt = '您还未关注我们公众号，\n\n 关注后可使用剩下的2次机会';
+        var _restxt = '\n 您还未关注我们公众号，\n\n 关注后可使用剩下的2次机会';
         var dlg = new MyDialog(_restxt, function () {
             dlg.close();
             GameView.showHtmlTip('follow-model');
         });
+        dlg.confim.y = 260;
         dlg.popup(true);
-        // dlg.confim.skin = 'ui/btn_follow.png';
+        dlg.confim.skin = 'ui/btn_follow.png';
         Laya.stage.addChild(dlg);
     };
     // 今天没有翻盘机会了

@@ -15,26 +15,21 @@ class GameMain{
     constructor() {
         // 优先使用webgl渲染，不支持会自动使用canvas
         Laya.init(640, 1009, Laya.WebGL);
-
         // 设置背景颜色  用于显示 loading...
         Laya.stage.bgColor = '#ff5529';
-
         // 性能监控
         // Laya.Stat.show();
-        // 底部要加   技术支持： 迈小步科技
-
         // 设置适配
         Laya.stage.scaleMode = LayaStage.SCALE_SHOWALL;
         Laya.stage.alignH = LayaStage.ALIGN_CENTER;
         Laya.stage.screenMode = LayaStage.SCREEN_VERTICAL;
-
         // 进入游戏显示加载进度
-        this.initLoading();
-
+        this.initLoadingText();
+        this.technicalSupport();
         this.init();
     }
     // 加载进入页面loading文字
-    initLoading():void {
+    initLoadingText():void {
         this.loadingTxt = new Laya.Text();
         this.loadingTxt.text = 'loading(0%)...';
         this.loadingTxt.color = '#ffffff';
@@ -49,10 +44,10 @@ class GameMain{
     // 初始化游戏 (加载游戏资源)
     init():void {
         var resArray:Array<any> = [
-            { url: 'ui/grid-bg.jpg', type: Loader.IMAGE },
-            { url: 'ui/gril.png', type: Loader.IMAGE },
-            { url: 'ui/tip-bg.jpg', type: Loader.IMAGE },
-            { url: 'ui/title.png', type: Loader.IMAGE},
+            // { url: 'ui/grid-bg.jpg', type: Loader.IMAGE },
+            // { url: 'ui/gril.png', type: Loader.IMAGE },
+            // { url: 'ui/tip-bg.jpg', type: Loader.IMAGE },
+            // { url: 'ui/title.png', type: Loader.IMAGE},
             { url: 'res/atlas/ui.atlas', type:Loader.ATLAS }
         ];
         Laya.loader.load(resArray, Hander.create(this, this.onLoadComplete), Hander.create(this, this.onLoadProgress));
@@ -78,6 +73,17 @@ class GameMain{
         // 添加开始界面
         GameMain.GameStart = new GameStart();
         Laya.stage.addChild(GameMain.GameStart);
+    }
+    // 技术支持
+    technicalSupport():void {
+        var txt:Laya.Text = new Laya.Text();
+        txt.text = '技术支持：迈小步科技';
+        txt.color = '#fff';
+        txt.fontSize = 16;
+        txt.x = (Laya.stage.width - txt.width) / 2;
+        txt.y = Laya.stage.height - 18;
+        txt.zOrder = 100;
+        Laya.stage.addChild(txt);
     }
 }
 new GameMain();

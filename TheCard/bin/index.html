@@ -60,17 +60,23 @@
 	<!--jsfile--Main-->
 
 	<!-- 提示分享 -->
-	<div class="cover" id='share-model' onclick='this.style.display = "none"'>
+	<div class="cover" id='share-model' onclick='hide'>
 		<img src="ui/share_img.png" alt="提示分享" class='share' />
 	</div>
 	<!-- 提示分享 end -->
 
 	<!-- 二维码 -->
-	<div class="cover follow" id='follow-model' onclick='this.style.display = "none"'>
+	<div class="cover follow" id='follow-model' onclick='hide'>
 		<p>长按二维码关注~</p>
 		<img src="ui/qrcode.jpg" alt="关注" class='share' />
 	</div>
 	<!-- 二维码 end -->
+	<!--<script>
+	function hide(e){
+		e.stopPropagation();
+		this.style.display = 'none';
+	}
+	</script>-->
 </body>
 
 </html>
