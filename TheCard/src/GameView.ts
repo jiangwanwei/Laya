@@ -4,6 +4,10 @@
 class GameView extends ui.GameViewUI {
     // 游戏次数
     public static chanceNum: number = 5;
+    // 是否关注
+    public static isFollow: boolean = true;
+    // 是否分享过
+    public static isShared: boolean = false;
     // 是否允许翻盘
     public static isAllow: boolean = false;
     // 当前选中牌的index
@@ -14,6 +18,7 @@ class GameView extends ui.GameViewUI {
     private curAwardType: number;
     // 奖励列表
     private awardData: Object = {2: '积分 x 1', 3: '积分 x 3', 4: '积分 x 5', 5: '百瑞蛋糕1榜', 6: '娜可露露蛋糕1榜', 7: '越慢玫瑰蛋糕1榜'};
+
     constructor() {
         super();
         this.updateChanceNum();
@@ -29,7 +34,7 @@ class GameView extends ui.GameViewUI {
         this.initCardListAnimate();
     }
     // 初始化卡牌 (发牌动画)
-    initCardListAnimate():void {
+    private initCardListAnimate():void {
         var dataSource:Array<any> = [];
         for (var i:number = 0; i < this.cardNum; i++) {
             // 添加List数据源
@@ -77,7 +82,8 @@ class GameView extends ui.GameViewUI {
         }
     }
     // 设置选中翻盘结果
-    setCurCardResult():void {
+    private setCurCardResult():void {
+        if (!this.GameStateCheck()) return;
         var r:number = Math.ceil(Math.random() * 100),
             type: number = r < 50 ? 1 : r < 35 ? 2 : r < 25 ? 3 : r < 20 ? 4 : 5;
         if (type === 5) {
@@ -93,14 +99,14 @@ class GameView extends ui.GameViewUI {
 
     }
     // 设置其他牌结果
-    setOtherCardResult():void {
+    private setOtherCardResult():void {
         var dataSource:Array<any> = [];
         for (var i:number = 0; i < this.cardNum; i++) {      
             if (i === this.curIndex) {
                 var _data = {card: {skin: `ui/award_${this.curAwardType}.png`}};
             } else {
                 var r:number = Math.ceil(Math.random() * 100),
-                type: number = r < 50 ? 4 : r < 35 ? 5 : r < 25 ? 3 : r < 20 ? 2 : 1;
+                type: number = r < 50 ? 4 : r < 25 ? 5 : r < 15 ? 3 : r < 10 ? 2 : 1;
                 if (type === 5) {
                     type = [5, 6, 7][Math.floor(Math.random()* 3)];
                 }
@@ -111,13 +117,13 @@ class GameView extends ui.GameViewUI {
         this.cardList.dataSource = dataSource;
         Laya.timer.once(300, this, this.showResult);
     }
-    // 显示结果弹窗
-    showResult():void {
+    // 翻牌结果显示
+    private showResult():void {
         var _restxt:string = '恭 喜 您 获 得';
         if (this.curAwardType === 1)  _restxt = '\n 运气不佳，差一点点~ \n \n 再接再厉！';
         var dlg:MyDialog = new MyDialog(_restxt, () => {
             dlg.close();
-            this.reset();
+            if (this.GameStateCheck()) this.reset();
         });
         var dlgManager:Laya.DialogManager = new Laya.DialogManager();
         if (this.curAwardType === 1) {
@@ -127,11 +133,62 @@ class GameView extends ui.GameViewUI {
             dlg.awardImg.skin = `ui/award_${this.curAwardType}.png`;
             dlg.confim.y = 290;
         }
-        // dlg.popup(true);
-        dlg.closeEffect = null;   // 关闭默认dialog关闭效果
-        // var mask:Laya.Sprite = new Laya.Sprite();
-        // dlgManager.maskLayer = mask;
+        var mask:Laya.Sprite = new Laya.Sprite();
+        dlgManager.maskLayer = mask;
         dlgManager.open(dlg);
         this.addChild(dlgManager);
+    }
+    // 检查当前用户游戏状态（是否有机会、是否关注、是否分享）
+    GameStateCheck():any {
+        if (GameView.chanceNum === 2 && !GameView.isFollow) {
+            this.haveToFollow();
+            return false;
+        } else if (GameView.chanceNum <= 0 && !GameView.isShared) {
+            this.haveToShareDialog();
+            return false
+        } else if (GameView.chanceNum <= 0) {
+            this.todayNoChance();
+            return false
+        }
+        return true;       
+    }
+    // 次数用完提示分享弹窗
+    private haveToShareDialog():void {
+        var dlg:MyDialog = new MyDialog('', () => {
+            // 显示分享提示层
+            dlg.close();
+            GameView.showHtmlTip('share-model');
+            this.reset();
+        });
+        dlg.confim.skin = 'ui/btn_share.png';
+        dlg.txtImg.skin = 'ui/nochance_txt.png';
+        dlg.popup(true);
+        Laya.stage.addChild(dlg);
+    }
+    // 提示关注弹窗
+    private haveToFollow():void {
+        var _restxt = '\n 您还未关注我们公众号，\n\n 关注后可使用剩下的2次机会';
+        var dlg:MyDialog = new MyDialog(_restxt, () => {
+            dlg.close();
+            GameView.showHtmlTip('follow-model');
+        });
+        dlg.confim.y = 260;
+        dlg.popup(true);
+        // dlg.confim.skin = 'ui/btn_follow.png';
+        Laya.stage.addChild(dlg);
+    }
+    // 今天没有翻盘机会了
+    private todayNoChance():void {
+        var _restxt = '今天的机会已经用完啦，\n 明天再来吧~';
+        var dlg:MyDialog = new MyDialog(_restxt, () => {
+            dlg.close();
+        });
+        dlg.confim.skin = 'ui/btn_bye.png';
+        dlg.popup(true);
+        Laya.stage.addChild(dlg);
+    }
+    // 显示html 提示层   （提示分享 、 提示关注）
+    public static showHtmlTip(_id: string):void {
+        document.getElementById(_id).style.display = 'block';
     }
 }

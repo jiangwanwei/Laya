@@ -43,6 +43,8 @@ P 3F664B1F award_5.png
 P DFE7A183 award_6.png
 P 118EBE05 award_7.png
 P 14278263 begin_btn.png.png
+P 57D35352 btn_bye.png
+P B009FF08 btn_continue.png
 P 30AAE3CC btn_share.png
 P B55EE9FE card-bg.png
 R 71FC430C card_init.jpg
@@ -57,8 +59,11 @@ P EF5CFAF1 my-award-btn.png
 P 991F2403 my-award-rule.png
 P E1D18296 my-award-title.png
 P 76E59714 my_award_btn.png
+P 29F8FAB4 nochance_txt.png
+R 1F95B016 qrcode.jpg
 R 6DD8322F rule-txt.png
 P 51C2F1E8 rule_btn.png
+R A8BF784E share_img.png
 R 08DAF68C tip-bg.jpg
 R 1EA011FA title.png
 P 090D1C46 top-bg.png

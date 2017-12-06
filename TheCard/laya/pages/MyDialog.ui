@@ -2,7 +2,7 @@
     "x":0,
     "type":"Dialog",
     "selectedBox":1,
-    "selecteID":14,
+    "selecteID":17,
     "props":{"width":560,"sceneColor":"#000000","height":400},
     "nodeParent":-1,
     "label":"Dialog",
@@ -44,7 +44,7 @@
         {
             "x":15,
             "type":"Button",
-            "props":{"y":291,"x":75,"var":"confim","stateNum":"1","skin":"ui/btn_share.png"},
+            "props":{"y":291,"x":75,"var":"confim","stateNum":"1","skin":"ui/btn_continue.png"},
             "nodeParent":1,
             "label":"Button(confim)",
             "isDirectory":false,
@@ -79,6 +79,19 @@
             "isAniNode":true,
             "hasChild":false,
             "compId":14,
+            "child":[
+                ]
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":102,"x":60,"var":"txtImg"},
+            "nodeParent":1,
+            "label":"Image(txtImg)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "compId":17,
             "child":[
                 ]
         }],

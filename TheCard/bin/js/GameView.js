@@ -90,6 +90,8 @@ var GameView = /** @class */ (function (_super) {
     };
     // 设置选中翻盘结果
     GameView.prototype.setCurCardResult = function () {
+        if (!this.GameStateCheck())
+            return;
         var r = Math.ceil(Math.random() * 100), type = r < 50 ? 1 : r < 35 ? 2 : r < 25 ? 3 : r < 20 ? 4 : 5;
         if (type === 5) {
             type = [5, 6, 7][Math.floor(Math.random() * 3)];
@@ -110,7 +112,7 @@ var GameView = /** @class */ (function (_super) {
                 var _data = { card: { skin: "ui/award_" + this.curAwardType + ".png" } };
             }
             else {
-                var r = Math.ceil(Math.random() * 100), type = r < 50 ? 4 : r < 35 ? 5 : r < 25 ? 3 : r < 20 ? 2 : 1;
+                var r = Math.ceil(Math.random() * 100), type = r < 50 ? 4 : r < 25 ? 5 : r < 15 ? 3 : r < 10 ? 2 : 1;
                 if (type === 5) {
                     type = [5, 6, 7][Math.floor(Math.random() * 3)];
                 }
@@ -121,7 +123,7 @@ var GameView = /** @class */ (function (_super) {
         this.cardList.dataSource = dataSource;
         Laya.timer.once(300, this, this.showResult);
     };
-    // 显示结果弹窗
+    // 翻牌结果显示
     GameView.prototype.showResult = function () {
         var _this = this;
         var _restxt = '恭 喜 您 获 得';
@@ -129,7 +131,8 @@ var GameView = /** @class */ (function (_super) {
             _restxt = '\n 运气不佳，差一点点~ \n \n 再接再厉！';
         var dlg = new MyDialog(_restxt, function () {
             dlg.close();
-            _this.reset();
+            if (_this.GameStateCheck())
+                _this.reset();
         });
         var dlgManager = new Laya.DialogManager();
         if (this.curAwardType === 1) {
@@ -140,12 +143,70 @@ var GameView = /** @class */ (function (_super) {
             dlg.awardImg.skin = "ui/award_" + this.curAwardType + ".png";
             dlg.confim.y = 290;
         }
-        dlgManager.closeEffectHandler = null; // 关闭默认dialog关闭效果
+        var mask = new Laya.Sprite();
+        dlgManager.maskLayer = mask;
         dlgManager.open(dlg);
         this.addChild(dlgManager);
     };
+    // 检查当前用户游戏状态（是否有机会、是否关注、是否分享）
+    GameView.prototype.GameStateCheck = function () {
+        if (GameView.chanceNum === 2 && !GameView.isFollow) {
+            this.haveToFollow();
+            return false;
+        }
+        else if (GameView.chanceNum <= 0 && !GameView.isShared) {
+            this.haveToShareDialog();
+            return false;
+        }
+        else if (GameView.chanceNum <= 0) {
+            this.todayNoChance();
+            return false;
+        }
+        return true;
+    };
+    // 次数用完提示分享弹窗
+    GameView.prototype.haveToShareDialog = function () {
+        var dlg = new MyDialog('', function () {
+            // 显示分享提示层
+            dlg.close();
+            GameView.showHtmlTip('share-model');
+        });
+        dlg.confim.skin = 'ui/btn_share.png';
+        dlg.txtImg.skin = 'ui/nochance_txt.png';
+        dlg.popup(true);
+        Laya.stage.addChild(dlg);
+    };
+    // 提示关注弹窗
+    GameView.prototype.haveToFollow = function () {
+        var _restxt = '您还未关注我们公众号，\n\n 关注后可使用剩下的2次机会';
+        var dlg = new MyDialog(_restxt, function () {
+            dlg.close();
+            GameView.showHtmlTip('follow-model');
+        });
+        dlg.popup(true);
+        // dlg.confim.skin = 'ui/btn_follow.png';
+        Laya.stage.addChild(dlg);
+    };
+    // 今天没有翻盘机会了
+    GameView.prototype.todayNoChance = function () {
+        var _restxt = '今天的机会已经用完啦，\n 明天再来吧~';
+        var dlg = new MyDialog(_restxt, function () {
+            dlg.close();
+        });
+        dlg.confim.skin = 'ui/btn_bye.png';
+        dlg.popup(true);
+        Laya.stage.addChild(dlg);
+    };
+    // 显示html 提示层   （提示分享 、 提示关注）
+    GameView.showHtmlTip = function (_id) {
+        document.getElementById(_id).style.display = 'block';
+    };
     // 游戏次数
     GameView.chanceNum = 5;
+    // 是否关注
+    GameView.isFollow = true;
+    // 是否分享过
+    GameView.isShared = false;
     // 是否允许翻盘
     GameView.isAllow = false;
     return GameView;

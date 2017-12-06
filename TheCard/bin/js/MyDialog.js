@@ -20,6 +20,9 @@ var MyDialog = /** @class */ (function (_super) {
         _this.btn_close.on(Laya.Event.CLICK, _this, _this.close);
         // 确定按钮事件
         _this.confim.on(Laya.Event.CLICK, _this, callback);
+        // 绑定可拖拽区域
+        _this.dragArea = '7,21,493,18';
+        _this.closeEffect = null; // 取消关闭特效
         return _this;
     }
     return MyDialog;

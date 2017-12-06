@@ -46,8 +46,9 @@ module ui {
 		public confim:Laya.Button;
 		public context:Laya.Label;
 		public awardImg:Laya.Image;
+		public txtImg:Laya.Image;
 
-        public static  uiView:any ={"type":"Dialog","props":{"width":560,"height":400},"child":[{"type":"Image","props":{"y":0,"x":0,"width":560,"skin":"ui/dialog-bg.png","height":400,"sizeGrid":"57,54,16,15"}},{"type":"Label","props":{"y":16,"x":512,"width":33,"var":"btn_close","height":31}},{"type":"Button","props":{"y":291,"x":75,"var":"confim","stateNum":1,"skin":"ui/btn_share.png"}},{"type":"Label","props":{"y":74,"x":98,"width":356,"var":"context","height":44,"fontSize":30,"color":"#ff643c","align":"center"}},{"type":"Image","props":{"y":133,"x":208,"width":123,"var":"awardImg","height":141}}]};
+        public static  uiView:any ={"type":"Dialog","props":{"width":560,"height":400},"child":[{"type":"Image","props":{"y":0,"x":0,"width":560,"skin":"ui/dialog-bg.png","height":400,"sizeGrid":"57,54,16,15"}},{"type":"Label","props":{"y":16,"x":512,"width":33,"var":"btn_close","height":31}},{"type":"Button","props":{"y":291,"x":75,"var":"confim","stateNum":1,"skin":"ui/btn_continue.png"}},{"type":"Label","props":{"y":74,"x":98,"width":356,"var":"context","height":44,"fontSize":30,"color":"#ff643c","align":"center"}},{"type":"Image","props":{"y":133,"x":208,"width":123,"var":"awardImg","height":141}},{"type":"Image","props":{"y":102,"x":60,"var":"txtImg"}}]};
         constructor(){ super()}
         createChildren():void {
         
