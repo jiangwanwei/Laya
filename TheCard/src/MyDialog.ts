@@ -1,5 +1,5 @@
 /**
- * 弹出框
+ * 弹出框 带关闭按钮
  */
 class MyDialog extends ui.MyDialogUI {
     constructor(txt: string, callback: Function) {

@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":1,
-    "selecteID":5,
+    "selectedBox":17,
+    "selecteID":36,
     "props":{"width":640,"sceneColor":"#000000","sceneBg":"laya/views/Index.jpg","height":1009},
     "nodeParent":-1,
     "label":"View",
@@ -130,9 +130,10 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":64,"x":56,"width":565,"valign":"middle","text":"恭喜XXX获得123蛋糕裙一张~","styleSkin":"ui/label.png","height":37,"color":"#6a2707"},
+            "props":{"y":64,"x":2,"width":636,"var":"loop_label","valign":"middle","styleSkin":"ui/label.png","height":37,"color":"#6a2707"},
             "nodeParent":1,
-            "label":"Label",
+            "label":"Label(loop_label)",
+            "isOpen":true,
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -163,7 +164,8 @@
                     "hasChild":false,
                     "compId":15,
                     "child":[
-                        ]
+                        ],
+                    "$HIDDEN":false
                 },
                 {
                     "type":"Label",
@@ -175,7 +177,8 @@
                     "hasChild":false,
                     "compId":16,
                     "child":[
-                        ]
+                        ],
+                    "$HIDDEN":false
                 }],
             "$LOCKED":true,
             "$HIDDEN":true
@@ -186,13 +189,14 @@
             "props":{"y":116,"x":48,"width":568,"var":"my_award","skin":"ui/dialog-bg.png","height":847},
             "nodeParent":1,
             "label":"Image(my_award)",
-            "isOpen":false,
+            "isOpen":true,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":17,
             "child":[
                 {
+                    "x":30,
                     "type":"Image",
                     "props":{"y":49,"x":34,"skin":"ui/my-award-title.png"},
                     "nodeParent":17,
@@ -204,9 +208,11 @@
                     "compId":18,
                     "child":[
                         ],
-                    "$LOCKED":true
+                    "$LOCKED":false,
+                    "$HIDDEN":false
                 },
                 {
+                    "x":30,
                     "type":"Image",
                     "props":{"y":729,"x":29,"skin":"ui/my-award-rule.png"},
                     "nodeParent":17,
@@ -217,13 +223,15 @@
                     "compId":19,
                     "child":[
                         ],
-                    "$LOCKED":true
+                    "$LOCKED":true,
+                    "$HIDDEN":false
                 },
                 {
+                    "x":30,
                     "type":"Image",
-                    "props":{"y":664,"x":119,"skin":"ui/my-award-btn.png"},
+                    "props":{"y":664,"x":119,"var":"shareTo","skin":"ui/my-award-btn.png"},
                     "nodeParent":17,
-                    "label":"Image",
+                    "label":"Image(shareTo)",
                     "isDirectory":false,
                     "isAniNode":true,
                     "hasChild":false,
@@ -233,6 +241,7 @@
                     "$LOCKED":true
                 },
                 {
+                    "x":30,
                     "type":"Label",
                     "props":{"y":5,"x":512,"width":50,"var":"btn_close_award","styleSkin":"ui/label.png","height":54},
                     "nodeParent":17,
@@ -243,9 +252,85 @@
                     "compId":22,
                     "child":[
                         ]
+                },
+                {
+                    "x":30,
+                    "type":"List",
+                    "props":{"y":156,"x":36,"width":490,"var":"my_award_list","vScrollBarSkin":"ui/vscroll.png","spaceY":0,"repeatY":5,"height":478},
+                    "nodeParent":17,
+                    "label":"List(my_award_list)",
+                    "isOpen":true,
+                    "isDirectory":true,
+                    "isAniNode":true,
+                    "hasChild":true,
+                    "compId":36,
+                    "child":[
+                        {
+                            "x":45,
+                            "type":"Box",
+                            "props":{"name":"render"},
+                            "nodeParent":36,
+                            "label":"Box(render)",
+                            "isOpen":false,
+                            "isDirectory":true,
+                            "isAniNode":false,
+                            "hasChild":true,
+                            "compId":35,
+                            "child":[
+                                {
+                                    "type":"Label",
+                                    "props":{"width":490,"styleSkin":"ui/label.png","height":85,"bgColor":"#ffeac1"},
+                                    "nodeParent":35,
+                                    "label":"Label",
+                                    "isDirectory":false,
+                                    "isAniNode":false,
+                                    "hasChild":false,
+                                    "compId":24,
+                                    "child":[
+                                        ],
+                                    "$LOCKED":true
+                                },
+                                {
+                                    "type":"Label",
+                                    "props":{"y":29,"x":24,"width":144,"text":"2017-12-07","styleSkin":"ui/label.png","name":"time","height":33,"fontSize":24,"color":"#f57747"},
+                                    "nodeParent":35,
+                                    "label":"Label(time)",
+                                    "isDirectory":false,
+                                    "isAniNode":false,
+                                    "hasChild":false,
+                                    "compId":25,
+                                    "child":[
+                                        ]
+                                },
+                                {
+                                    "type":"Label",
+                                    "props":{"y":29,"x":192,"width":144,"text":"XXXX蛋糕券","styleSkin":"ui/label.png","name":"name","height":33,"fontSize":24,"color":"#f57747"},
+                                    "nodeParent":35,
+                                    "label":"Label(name)",
+                                    "isDirectory":false,
+                                    "isAniNode":false,
+                                    "hasChild":false,
+                                    "compId":26,
+                                    "child":[
+                                        ]
+                                },
+                                {
+                                    "type":"Label",
+                                    "props":{"y":29,"x":380,"width":77,"text":"1","styleSkin":"ui/label.png","name":"num","height":33,"fontSize":24,"color":"#f57747","align":"center"},
+                                    "nodeParent":35,
+                                    "label":"Label(num)",
+                                    "isDirectory":false,
+                                    "isAniNode":false,
+                                    "hasChild":false,
+                                    "compId":27,
+                                    "child":[
+                                        ]
+                                }],
+                            "$HIDDEN":false
+                        }]
                 }],
             "$LOCKED":true,
-            "$HIDDEN":true
+            "$HIDDEN":false
         }],
     "animations":[
         {

@@ -19,10 +19,9 @@ var GameView = /** @class */ (function (_super) {
         _this.cardNum = 9;
         // 奖励列表
         _this.awardData = { 2: '积分 x 1', 3: '积分 x 3', 4: '积分 x 5', 5: '百瑞蛋糕1榜', 6: '娜可露露蛋糕1榜', 7: '越慢玫瑰蛋糕1榜' };
-        _this.updateChanceNum();
-        _this.reset();
         // 卡牌绑定点击事件
         _this.cardList.mouseHandler = Laya.Handler.create(_this, _this.cardSelect, null, false);
+        _this.btn_home.on(Laya.Event.CLICK, _this, GameMain.returnHome);
         return _this;
     }
     // 重置界面
@@ -32,6 +31,7 @@ var GameView = /** @class */ (function (_super) {
         document.body.style.background = '#ff5529';
         GameView.isAllow = false;
         this.initCardListAnimate();
+        this.updateChanceNum();
     };
     // 初始化卡牌 (发牌动画)
     GameView.prototype.initCardListAnimate = function () {
@@ -42,7 +42,6 @@ var GameView = /** @class */ (function (_super) {
             // 初始化card属性
             this.cardList.getCell(i).x = 0;
             this.cardList.getCell(i).y = 0;
-            this.cardList.getCell(i).skewY = 0;
             var _props = {};
             if ([0, 3, 6].indexOf(i) !== -1) {
                 _props.x = 0;
@@ -73,14 +72,14 @@ var GameView = /** @class */ (function (_super) {
     };
     // 更新次数
     GameView.prototype.updateChanceNum = function () {
-        this.chanceNum.index = GameView.chanceNum;
+        this.chanceNumClip.index = GameStart.chanceNum;
     };
     // 开始翻盘
     GameView.prototype.cardSelect = function (e, index) {
-        if (!GameView.isAllow || !this.GameStateCheck())
-            return;
         e.stopPropagation();
         if (e.type === 'mousedown') {
+            if (!GameView.isAllow || !this.GameStateCheck())
+                return;
             GameView.isAllow = false;
             this.curIndex = index;
             Laya.Tween.to(this.cardList.getCell(index).getChildByName('card'), { skewY: 360 }, 300, Laya.Ease.bounceIn, Laya.Handler.create(this, this.setCurCardResult));
@@ -88,8 +87,6 @@ var GameView = /** @class */ (function (_super) {
     };
     // 设置选中翻盘结果
     GameView.prototype.setCurCardResult = function () {
-        if (!this.GameStateCheck())
-            return;
         var r = Math.ceil(Math.random() * 100), type = r < 50 ? 1 : r < 35 ? 2 : r < 25 ? 3 : r < 20 ? 4 : 5;
         if (type === 5) {
             type = [5, 6, 7][Math.floor(Math.random() * 3)];
@@ -98,7 +95,8 @@ var GameView = /** @class */ (function (_super) {
         var _res = { card: { skin: "ui/award_" + type + ".png" } };
         this.cardList.setItem(this.curIndex, _res);
         // 次数-1
-        GameView.chanceNum -= 1;
+        GameStart.chanceNum -= 1;
+        GameMain.getUserChance();
         this.updateChanceNum();
         Laya.timer.once(1000, this, this.setOtherCardResult);
     };
@@ -107,14 +105,14 @@ var GameView = /** @class */ (function (_super) {
         var dataSource = [];
         for (var i = 0; i < this.cardNum; i++) {
             if (i === this.curIndex) {
-                var _data = { card: { skin: "ui/award_" + this.curAwardType + ".png" } };
+                var _data = { card: { skin: "ui/award_" + this.curAwardType + ".png", skewY: 0 } };
             }
             else {
                 var r = Math.ceil(Math.random() * 100), type = r < 50 ? 4 : r < 25 ? 5 : r < 15 ? 3 : r < 10 ? 2 : 1;
                 if (type === 5) {
                     type = [5, 6, 7][Math.floor(Math.random() * 3)];
                 }
-                var _data = { card: { skin: "ui/award_" + Math.ceil(Math.random() * 7) + ".png" } };
+                var _data = { card: { skin: "ui/award_" + Math.ceil(Math.random() * 7) + ".png", skewY: 0 } };
             }
             dataSource.push(_data);
         }
@@ -127,36 +125,32 @@ var GameView = /** @class */ (function (_super) {
         var _restxt = '恭 喜 您 获 得';
         if (this.curAwardType === 1)
             _restxt = '\n 运气不佳，差一点点~ \n \n 再接再厉！';
-        var dlg = new MyDialog(_restxt, function () {
-            dlg.close();
+        this.noCloseDialog = new noCloseDialog(_restxt, 'ui/btn_continue.png', function () {
+            _this.noCloseDialog.close();
             if (_this.GameStateCheck())
                 _this.reset();
         });
-        var dlgManager = new Laya.DialogManager();
         if (this.curAwardType === 1) {
-            dlg.awardImg.removeSelf();
-            dlg.confim.y = 260;
+            this.noCloseDialog.awardImg.removeSelf();
+            this.noCloseDialog.confim.y = 260;
         }
         else {
-            dlg.awardImg.skin = "ui/award_" + this.curAwardType + ".png";
-            dlg.confim.y = 290;
+            this.noCloseDialog.awardImg.skin = "ui/award_" + this.curAwardType + ".png";
         }
-        var mask = new Laya.Sprite();
-        dlgManager.maskLayer = mask;
-        dlgManager.open(dlg);
-        this.addChild(dlgManager);
+        this.noCloseDialog.popup(true);
+        Laya.stage.addChild(this.noCloseDialog);
     };
     // 检查当前用户游戏状态（是否有机会、是否关注、是否分享）
     GameView.prototype.GameStateCheck = function () {
-        if (GameView.chanceNum === 2 && !GameView.isFollow) {
-            this.haveToFollow();
-            return false;
-        }
-        else if (GameView.chanceNum <= 0 && !GameView.isShared) {
+        // if (GameStart.chanceNum === 2 && !GameView.isFollow) {
+        //     this.haveToFollow();
+        //     return false;
+        // } else 
+        if (GameStart.chanceNum <= 0 && !GameView.isShared) {
             this.haveToShareDialog();
             return false;
         }
-        else if (GameView.chanceNum <= 0) {
+        else if (GameStart.chanceNum <= 0) {
             this.todayNoChance();
             return false;
         }
@@ -164,49 +158,48 @@ var GameView = /** @class */ (function (_super) {
     };
     // 次数用完提示分享弹窗
     GameView.prototype.haveToShareDialog = function () {
-        var dlg = new MyDialog('', function () {
+        var _this = this;
+        this.noCloseDialog = new noCloseDialog('', 'ui/btn_share.png', function () {
             // 显示分享提示层
-            dlg.close();
+            _this.noCloseDialog.close();
             GameView.showHtmlTip('share-model');
         });
-        dlg.confim.skin = 'ui/btn_share.png';
-        dlg.txtImg.skin = 'ui/nochance_txt.png';
-        dlg.popup(true);
-        Laya.stage.addChild(dlg);
+        this.noCloseDialog.txtImg.skin = 'ui/nochance_txt.png';
+        this.noCloseDialog.popup(true);
+        Laya.stage.addChild(this.noCloseDialog);
     };
     // 提示关注弹窗
     GameView.prototype.haveToFollow = function () {
-        var _restxt = '\n 您还未关注我们公众号，\n\n 关注后可使用剩下的2次机会';
-        var dlg = new MyDialog(_restxt, function () {
-            dlg.close();
+        var _this = this;
+        var _restxt = '\n 点击关注公众号 "迈小步科技"\n \n 可提高概率哦~';
+        this.noCloseDialog = new noCloseDialog(_restxt, 'ui/btn_follow.png', function () {
+            _this.noCloseDialog.close();
             GameView.showHtmlTip('follow-model');
         });
-        dlg.confim.y = 260;
-        dlg.popup(true);
-        dlg.confim.skin = 'ui/btn_follow.png';
-        Laya.stage.addChild(dlg);
+        this.noCloseDialog.confim.y = 260;
+        this.noCloseDialog.popup(true);
+        Laya.stage.addChild(this.noCloseDialog);
     };
     // 今天没有翻盘机会了
     GameView.prototype.todayNoChance = function () {
-        var _restxt = '今天的机会已经用完啦，\n 明天再来吧~';
-        var dlg = new MyDialog(_restxt, function () {
-            dlg.close();
-        });
-        dlg.confim.skin = 'ui/btn_bye.png';
-        dlg.popup(true);
-        Laya.stage.addChild(dlg);
+        var _restxt = '今天的机会已经用完啦，\n\n 明天再来吧~';
+        this.noCloseDialog = new noCloseDialog(_restxt, 'ui/btn_bye.png', this.noCloseDialog.close);
+        this.noCloseDialog.popup(true);
+        Laya.stage.addChild(this.noCloseDialog);
     };
-    // 显示html 提示层   （提示分享 、 提示关注）
+    // 显示html 提示层   （提示分享 share-model 、 提示关注 follow-model）
     GameView.showHtmlTip = function (_id) {
         document.getElementById(_id).style.display = 'block';
     };
-    // 游戏次数
-    GameView.chanceNum = 5;
+    // 随机数
+    GameView.prototype.getRandom = function () {
+        return Math.ceil(Math.random() * 9);
+    };
     // 是否关注
-    GameView.isFollow = true;
+    GameView.isFollow = false;
     // 是否分享过
     GameView.isShared = false;
-    // 是否允许翻盘
+    // 是否允许翻牌
     GameView.isAllow = false;
     return GameView;
 }(ui.GameViewUI));

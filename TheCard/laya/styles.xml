@@ -2,4 +2,6 @@
    <item name="ui/dialog-bg.png" type="Image" compress="0" pack="0" quality="80" props="sizeGrid=57,54,16,15" picType="0"/>
    <item name="ui/top-bg.png" type="Image" compress="0" pack="0" quality="80" props="sizeGrid=0,0,0,0,1" picType="0"/>
    <item name="ui" type="" compress="0" pack="0" quality="80" props="" picType="0"/>
+   <item name="ui/dialog-bg-noclose.png" type="Image" compress="0" pack="0" quality="80" props="sizeGrid=13,15,12,15" picType="0"/>
+   <item name="ui/input_bg.png" type="TextInput" compress="0" pack="0" quality="80" props="sizeGrid=14,12,14,12" picType="0"/>
 </res>
