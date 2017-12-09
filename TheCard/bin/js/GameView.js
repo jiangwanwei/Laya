@@ -122,7 +122,7 @@ var GameView = /** @class */ (function (_super) {
     // 翻牌结果显示
     GameView.prototype.showResult = function () {
         var _this = this;
-        var _restxt = '恭 喜 您 获 得';
+        var _restxt = '恭 喜 您 获 得'; // award_1_coupon_1
         if (this.curAwardType === 1)
             _restxt = '\n 运气不佳，差一点点~ \n \n 再接再厉！';
         this.noCloseDialog = new noCloseDialog(_restxt, 'ui/btn_continue.png', function () {
@@ -146,7 +146,7 @@ var GameView = /** @class */ (function (_super) {
         //     this.haveToFollow();
         //     return false;
         // } else 
-        if (GameStart.chanceNum <= 0 && !GameView.isShared) {
+        if (GameStart.chanceNum <= 0 && !GameStart.isShared) {
             this.haveToShareDialog();
             return false;
         }
@@ -197,8 +197,6 @@ var GameView = /** @class */ (function (_super) {
     };
     // 是否关注
     GameView.isFollow = false;
-    // 是否分享过
-    GameView.isShared = false;
     // 是否允许翻牌
     GameView.isAllow = false;
     return GameView;

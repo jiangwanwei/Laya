@@ -17,40 +17,43 @@ var GameStart = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         // 单个滚动信息的宽度
         _this.LOOP_TEXT_UNIT_WIDTH = 300;
-        // 绑定显示规则事件
-        _this.btn_rule.on(Laya.Event.MOUSE_DOWN, _this, _this.setRuleState(true, _this.rule));
-        // 绑定隐藏规则事件
-        _this.btn_rule_close.on(Laya.Event.MOUSE_DOWN, _this, _this.setRuleState(false, _this.rule));
-        _this.setDefaultProp(_this.rule);
-        // 绑定显示我奖励事件
-        _this.btn_my_award.on(Laya.Event.MOUSE_DOWN, null, function (a) {
-            _this.setRuleState(true, _this.my_award)();
-            if (GameMain.TOKEN) {
-                _this.getMyAwardList();
-            }
-        });
-        // 绑定隐藏我奖励事件
-        _this.btn_close_award.on(Laya.Event.MOUSE_DOWN, _this, _this.setRuleState(false, _this.my_award));
-        _this.setDefaultProp(_this.my_award);
-        // 点击开始
-        _this.btn_bigin.on(Laya.Event.MOUSE_DOWN, _this, _this.beginHandle);
-        document.body.style.background = '#f57747';
-        // 召唤小伙伴参与
-        _this.shareTo.on(Laya.Event.CLICK, null, function (a) {
-            GameView.showHtmlTip('share-model');
-        });
+        // 开始页面所有按钮绑定事件
+        _this.bindEvent();
+        // 设置body背景颜色和当前界面颜色相近
+        document.body.style.background = '#f57759';
         // 获取滚动中奖数据
         _this.getLoopList();
         if (GameMain.TOKEN) {
-            _this.getMyAwardList();
-            GameMain.getUserChance('read');
-            // 是否分享
-            new Http({ url: API.SHARE_STATE }, function (data) {
-                console.log(data);
-            });
+            GameMain.getUserChance('read'); // 取得用户今天的游戏次数
+            // 今日是否分享状态
+            new Http({ url: API.SHARE_STATE }, function (data) { GameStart.isShared = !!data; });
         }
+        // 清空我的奖品数据列表数据源
+        _this.my_award_list.dataSource = [];
         return _this;
     }
+    // 绑定按钮事件  （我的奖品、规则按钮、召唤小伙伴、开始按钮）
+    GameStart.prototype.bindEvent = function () {
+        var _this = this;
+        // 绑定显示规则事件
+        this.btn_rule.on(Laya.Event.MOUSE_DOWN, this, this.setRuleState(true, this.rule));
+        // 绑定隐藏规则事件
+        this.btn_rule_close.on(Laya.Event.MOUSE_DOWN, this, this.setRuleState(false, this.rule));
+        this.setDefaultProp(this.rule);
+        // 绑定显示我奖励事件
+        this.btn_my_award.on(Laya.Event.MOUSE_DOWN, null, function (a) {
+            _this.setRuleState(true, _this.my_award)();
+            if (GameMain.TOKEN)
+                _this.getMyAwardList(); // 请求我的奖品列表
+        });
+        // 绑定隐藏我奖励事件
+        this.btn_close_award.on(Laya.Event.MOUSE_DOWN, this, this.setRuleState(false, this.my_award));
+        this.setDefaultProp(this.my_award);
+        // 点击开始
+        this.btn_bigin.on(Laya.Event.MOUSE_DOWN, this, this.beginHandle);
+        // 召唤小伙伴参与
+        this.shareTo.on(Laya.Event.CLICK, null, function (a) { GameView.showHtmlTip('share-model'); });
+    };
     // 滚动中奖数据
     GameStart.prototype.getLoopList = function () {
         var _this = this;
@@ -68,17 +71,31 @@ var GameStart = /** @class */ (function (_super) {
             _this.setLoopList();
         });
     };
-    // 获取抽奖配置
+    // 获取抽奖配置 (概率、奖品)
     GameStart.getGameParams = function () {
         new Http({ url: API.PARAMS }, function (data) {
-            console.log(data);
-        });
-        new Http({
-            url: API.SHARE_CREATE,
-        }, function (data) {
-            if (!data.data)
-                return;
-            GameStart.chanceNum = data.data;
+            var prize_rate = data.prize_rate, prize_options = data.prize_options;
+            for (var k in prize_rate) {
+                prize_rate[k].name = k;
+                GameStart.PRIZE_RATE.push(prize_rate[k]);
+            }
+            // 设置概率 并从小到大排序
+            GameStart.PRIZE_RATE.sort(function (a, b) { return (a.times > b.times || -1); });
+            var _loop_1 = function (k) {
+                prize_options[k].coupon.forEach(function (el, i) {
+                    el.name = k + "-coupon-" + i;
+                    GameStart.ALL_PRIZE.push(el);
+                });
+                prize_options[k].integral.forEach(function (el, i) {
+                    el.name = k + "-integral-" + i;
+                    GameStart.ALL_PRIZE.push(el);
+                });
+            };
+            // 设置所有奖品列表 加入name字段作为计算标志
+            for (var k in prize_options) {
+                _loop_1(k);
+            }
+            console.log(GameStart.PRIZE_RATE, GameStart.ALL_PRIZE);
         });
     };
     // 获取我的奖励列表
@@ -129,6 +146,9 @@ var GameStart = /** @class */ (function (_super) {
     };
     // 开始游戏
     GameStart.prototype.beginHandle = function () {
+        if (GameStart.PRIZE_RATE.length < 1) {
+            return alert('游戏参数获取中...请稍等');
+        }
         if (GameMain.TOKEN) {
             this.removeSelf();
             if (!GameMain.GameView) {
@@ -168,6 +188,22 @@ var GameStart = /** @class */ (function (_super) {
             }
         }
     };
+    // 分享回调
+    GameStart.prototype.shareCallback = function () {
+        new Http({
+            url: API.SHARE_CREATE,
+        }, function (data) {
+            if (!data.data)
+                return;
+            GameStart.chanceNum = data.data;
+        });
+    };
+    // 是否分享过
+    GameStart.isShared = false;
+    // 中奖率
+    GameStart.PRIZE_RATE = [];
+    // 所有奖品列表
+    GameStart.ALL_PRIZE = [];
     return GameStart;
 }(ui.IndexUI));
 //# sourceMappingURL=GameStart.js.map

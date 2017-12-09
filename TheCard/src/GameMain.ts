@@ -86,20 +86,20 @@ class GameMain {
         }))
     }
     // 加载游戏开始界面
-    loadGameStart():void {        
-        // 是否绑定手机号码
+    loadGameStart():void {
         GameMain.OPPEN_ID = GameMain.GetQueryString('openid');
-        GameMain.TOKEN = GameMain.GetQueryString('token');
+        GameMain.TOKEN = GameMain.GetQueryString('token');  
+        // 添加开始界面
+        GameMain.GameStart = new GameStart();
+        Laya.stage.addChild(GameMain.GameStart);
+        // 获取游戏配置
+        GameStart.getGameParams();    
+        // 是否绑定手机号码
         if (GameMain.OPPEN_ID) {
             var mobile:InputMobile = new InputMobile();
             mobile.popup(true);
             Laya.stage.addChild(mobile);
         }
-        // 添加开始界面
-        GameMain.GameStart = new GameStart();
-        Laya.stage.addChild(GameMain.GameStart);
-        // 获取游戏配置
-        GameStart.getGameParams();
     }
     // 技术支持
     technicalSupport():void {
@@ -125,11 +125,11 @@ class GameMain {
         if(r!=null)return  decodeURIComponent(r[2]);
         return null;
     }
-    // 获取游戏次数 (mark = read), 次数-1; 
-    static getUserChance(mark:string = ''):void {
+    // 获取游戏次数 (mark = read), 发送中奖内容（次数-1 mark = '' || write）; 
+    static getAndSetUserChance(mark:string = '', win_info:string = ''):void {
         new Http({
             url: API.INFO,
-            data: { mark }
+            data: { mark, win_info }
         }, data => {
             GameStart.historyChanceNum = data.allTime;
             GameStart.chanceNum = data.surplus_times;

@@ -58,7 +58,6 @@ module ui {
 
             super.createChildren();
             this.createView(ui.LoadingUI.uiView);
-
         }
 
     }

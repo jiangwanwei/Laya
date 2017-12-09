@@ -11,7 +11,7 @@ class GameView extends ui.GameViewUI {
     // 卡牌数量
     private cardNum: number = 9;
     // 当前获得奖励类型
-    private curAwardType: number;
+    private curAwardName: string;
     // 奖励列表
     private awardData: Object = {2: '积分 x 1', 3: '积分 x 3', 4: '积分 x 5', 5: '百瑞蛋糕1榜', 6: '娜可露露蛋糕1榜', 7: '越慢玫瑰蛋糕1榜'};
     // 提示框
@@ -21,6 +21,8 @@ class GameView extends ui.GameViewUI {
         // 卡牌绑定点击事件
         this.cardList.mouseHandler = Laya.Handler.create(this, this.cardSelect, null, false);
         this.btn_home.on(Laya.Event.CLICK, this, GameMain.returnHome);
+        this.updateChanceNum();
+        this.getShareParams();  // 获取分享参数
     }
     // 重置界面
     reset():void {
@@ -28,8 +30,8 @@ class GameView extends ui.GameViewUI {
         Laya.stage.bgColor = '#ff5529';
         document.body.style.background = '#ff5529';
         GameView.isAllow = false;
+        this.curAwardName = '';
         this.initCardListAnimate();
-        this.updateChanceNum();
     }
     // 初始化卡牌 (发牌动画)
     private initCardListAnimate():void {
@@ -54,14 +56,12 @@ class GameView extends ui.GameViewUI {
             Laya.Tween.to(this.cardList.getCell(i), _props, 200, Laya.Ease.bounceInOut, null, i * 100);
         }
         // 所有动画执行完毕开启点击事件
-        Laya.timer.once(this.cardNum * 100, null, () => {
-            GameView.isAllow = true;
-        });
+        Laya.timer.once(this.cardNum * 100, null, () => { GameView.isAllow = true });
         // 设置List数据源
         this.cardList.dataSource = dataSource;
     }
     // 更新次数
-    private updateChanceNum():void {
+    public updateChanceNum():void {
         this.chanceNumClip.index = GameStart.chanceNum;
     }
     // 开始翻盘
@@ -72,39 +72,53 @@ class GameView extends ui.GameViewUI {
             GameView.isAllow = false;
             this.curIndex = index;
             Laya.Tween.to(this.cardList.getCell(index).getChildByName('card'), {skewY: 360}, 300, Laya.Ease.bounceIn, Laya.Handler.create(this, this.setCurCardResult))
+            
+            var isAward:boolean = (Math.ceil(Math.random() * 100) < 10), // 10%概率
+                type:string,
+                _data:any = {};
+            if (isAward) {  // 中奖
+                // 计算历史次数能中几等奖
+                GameStart.PRIZE_RATE.forEach(a => {
+                    if (GameStart.historyChanceNum >= a.times) {
+                        type = a.name;
+                    }
+                })
+                // 从能中奖项中抽取一个 {"一等奖":{"coupon":[{"type":3,"id":3}]}}  或者  {"一等奖":{"integral":[{"value":1000}]}}
+                if (type) {
+                    var _tmplist:Array<any> = GameStart.ALL_PRIZE.filter(a => a.name.search(type) === 0);
+                    _tmplist.sort((a, b) => (Math.random() - 0.5 || -1));
+                    type = _tmplist[0].name;
+                    var [name, flag] = type.split('-');
+                    _data[name][flag] = [_tmplist[0]];
+                }
+            }
+            GameMain.getAndSetUserChance('', JSON.stringify(_data));   // 发送中奖数据 请求次数-1
+            this.curAwardName = type;
         }
     }
     // 设置选中翻盘结果
-    private setCurCardResult():void {
-        var r:number = Math.ceil(Math.random() * 100),
-            type: number = r < 50 ? 1 : r < 35 ? 2 : r < 25 ? 3 : r < 20 ? 4 : 5;
-        if (type === 5) {
-            type = [5, 6, 7][Math.floor(Math.random()* 3)];
-        }
-        this.curAwardType = type;
-        var _res = { card: {skin: `ui/award_${type}.png`} };
+    private setCurCardResult():void {        
+        var _res = { card: {skin: this.curAwardName ? `ui/${this.curAwardName}.png` : `ui/award_1.png`} };
         this.cardList.setItem(this.curIndex, _res);
-        // 次数-1
+        // 次数-1 GameStart.historyChanceNum
         GameStart.chanceNum -= 1;
-        GameMain.getUserChance();
-        this.updateChanceNum();
+        this.updateChanceNum();        
         Laya.timer.once(1000, this, this.setOtherCardResult);
-
     }
     // 设置其他牌结果
     private setOtherCardResult():void {
         var dataSource:Array<any> = [];
+        // 打乱所有奖项
+        GameStart.ALL_PRIZE.sort(a => Math.random() - 0.5 || -1);
         for (var i:number = 0; i < this.cardNum; i++) {      
             if (i === this.curIndex) {
-                var _data = {card: {skin: `ui/award_${this.curAwardType}.png`, skewY: 0}};
+                var _data:any = {card: {skin: `ui/${this.curAwardName}.png`}};
             } else {
-                var r:number = Math.ceil(Math.random() * 100),
-                type: number = r < 50 ? 4 : r < 25 ? 5 : r < 15 ? 3 : r < 10 ? 2 : 1;
-                if (type === 5) {
-                    type = [5, 6, 7][Math.floor(Math.random()* 3)];
-                }
-                var _data = {card: {skin: `ui/award_${Math.ceil(Math.random() * 7)}.png`, skewY: 0}};
+                var r:number = Math.floor(Math.random() * 100),
+                    type:number = r < 15 ? 0 : 1;  // 百分之15出现 运气不佳         
+                var _data:any = {card: {skin: type ? `ui/${GameStart.ALL_PRIZE[i].name}.png` : `ui/award_1.png`}};
             }
+            _data.card.skewY = 0;
             dataSource.push(_data);
         }
         this.cardList.dataSource = dataSource;
@@ -112,17 +126,17 @@ class GameView extends ui.GameViewUI {
     }
     // 翻牌结果显示
     private showResult():void {
-        var _restxt:string = '恭 喜 您 获 得';
-        if (this.curAwardType === 1)  _restxt = '\n 运气不佳，差一点点~ \n \n 再接再厉！';
+        var _restxt:string = '恭 喜 您 获 得';  // award_1_coupon_1
+        if (!this.curAwardName)  _restxt = '\n 运气不佳，差一点点~ \n \n 再接再厉！';
         this.noCloseDialog = new noCloseDialog(_restxt, 'ui/btn_continue.png', () => {
             this.noCloseDialog.close();
             if (this.GameStateCheck()) this.reset();
         });
-        if (this.curAwardType === 1) {
+        if (!this.curAwardName) {
             this.noCloseDialog.awardImg.removeSelf();
             this.noCloseDialog.confim.y = 260;
         } else {
-            this.noCloseDialog.awardImg.skin = `ui/award_${this.curAwardType}.png`;
+            this.noCloseDialog.awardImg.skin = `ui/${this.curAwardName}.png`;
         }        
         this.noCloseDialog.popup(true);
         Laya.stage.addChild(this.noCloseDialog);
@@ -175,8 +189,8 @@ class GameView extends ui.GameViewUI {
     public static showHtmlTip(_id: string):void {
         document.getElementById(_id).style.display = 'block';
     }
-    // 随机数
-    private getRandom():any {
-        return Math.ceil(Math.random() * 9);
+    // 获取分享配置
+    getShareParams():void {
+        
     }
 }

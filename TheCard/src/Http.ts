@@ -3,6 +3,7 @@
  */
 const codeState = {
     20000: '参数错误',
+    21002: '用户已绑定',
 }
 class Http {
     constructor(_params:any, _complete:Function, _err: Function = () => {}) {
@@ -23,7 +24,7 @@ class Http {
         }
         // _q += `token=${}`
         xhr.send(
-            'http://mxb.net/game' + _params.url + _q, 
+            'http://a.maixiaobu.com/game' + _params.url + _q, 
             // _params.data || '', 
             '',
             _params.type || 'get', 

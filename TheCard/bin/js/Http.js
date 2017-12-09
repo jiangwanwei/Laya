@@ -3,6 +3,7 @@
  */
 var codeState = {
     20000: '参数错误',
+    21002: '用户已绑定',
 };
 var Http = /** @class */ (function () {
     function Http(_params, _complete, _err) {
@@ -24,7 +25,7 @@ var Http = /** @class */ (function () {
             _q += k + "=" + _params.data[k] + "&";
         }
         // _q += `token=${}`
-        xhr.send('http://mxb.net/game' + _params.url + _q, 
+        xhr.send('http://a.maixiaobu.com/game' + _params.url + _q, 
         // _params.data || '', 
         '', _params.type || 'get', 'text', [
             // "Content-Type", "application/json",

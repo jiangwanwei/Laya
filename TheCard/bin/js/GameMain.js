@@ -76,19 +76,19 @@ var GameMain = /** @class */ (function () {
     };
     // 加载游戏开始界面
     GameMain.prototype.loadGameStart = function () {
-        // 是否绑定手机号码
         GameMain.OPPEN_ID = GameMain.GetQueryString('openid');
         GameMain.TOKEN = GameMain.GetQueryString('token');
-        if (GameMain.OPPEN_ID) {
-            var mobile = new InputMobile();
-            mobile.popup(true);
-            Laya.stage.addChild(mobile);
-        }
         // 添加开始界面
         GameMain.GameStart = new GameStart();
         Laya.stage.addChild(GameMain.GameStart);
         // 获取游戏配置
         GameStart.getGameParams();
+        // 是否绑定手机号码
+        if (GameMain.OPPEN_ID) {
+            var mobile = new InputMobile();
+            mobile.popup(true);
+            Laya.stage.addChild(mobile);
+        }
     };
     // 技术支持
     GameMain.prototype.technicalSupport = function () {
