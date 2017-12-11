@@ -33,12 +33,9 @@ class InputMobile extends ui.inputMobileUI {
                 wx_openid: GameMain.OPPEN_ID,
             }
         }, data => {
-            GameMain.TOKEN = data;
-            loading.removeSelf();
-            loading.destroy();
-            this.close();
+            location.href = <string>(location.origin + location.pathname + '?token=' + data.token + '&member_id=' + data.member_id);
         }, a => {
-           loading.removeSelf();
+            loading.removeSelf();
             loading.destroy(); 
         })        
     }

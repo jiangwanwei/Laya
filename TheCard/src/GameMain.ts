@@ -4,16 +4,6 @@ import LayaStage = Laya.Stage;
 import Loader = Laya.Loader;
 import Hander = Laya.Handler;
 
-const API = {
-    PARAMS: '/tools-fans',  // 中奖设置
-    LOOP_AWRAD_LIST: '/tools-fans/win-info',   // 滚动中奖列表
-    INFO: '/tools-fans/create',  // 抽奖 mark=read 为获取用户抽奖设置
-    AWRAD_LIST: '/tools-fans-user-info',  // 用户中奖列表
-    BIND_USER: '/bind-wx-openid',   // 绑定手机号
-    SHARE_PARAMS: '/wechat-share', // 分享参数获取
-    SHARE_CREATE: '/wechat-share/create', // 分享成功+次数
-    SHARE_STATE: '/wechat-shared', // 是否分享过
-}
 class GameMain {
     // 游戏开始界面
     public static GameStart: GameStart;
@@ -25,7 +15,10 @@ class GameMain {
     static OPPEN_ID: string;
     // TOKEN
     static TOKEN:string;
-
+    // 会员id
+    static MEMBER_ID:string;
+    // 分享人id  ， 被助力人的id
+    static SHARE_ID:string;
     constructor() {
         this.setStageParams();
         // 进入游戏显示加载进度
@@ -71,11 +64,11 @@ class GameMain {
     }
     // 加载游戏资源进度
     onLoadProgress(num: number):void {        
-        this.loading.progress.text = `${(num * 100).toFixed(0)}%`;
+        this.loading.progress.text = (num * 100).toFixed(0) + '%';
     }
     // 加载游戏资源完成
     onLoadComplete():void {
-        this.loading.progress.text = `100%`;
+        this.loading.progress.text = '100%';
         Laya.Tween.to(this.loading, {alpha: 0}, 200, Laya.Ease.bounceInOut, Hander.create(null, () => {
             Laya.stage.bgColor = '#ff5529';
             this.loading.visible = false;
@@ -88,12 +81,17 @@ class GameMain {
     // 加载游戏开始界面
     loadGameStart():void {
         GameMain.OPPEN_ID = GameMain.GetQueryString('openid');
-        GameMain.TOKEN = GameMain.GetQueryString('token');  
+        GameMain.TOKEN = GameMain.GetQueryString('token');
+        GameMain.MEMBER_ID = GameMain.GetQueryString('member_id');
+        GameMain.SHARE_ID = GameMain.GetQueryString('share_id');
+        GameMain.TOKEN = GameMain.TOKEN;
         // 添加开始界面
         GameMain.GameStart = new GameStart();
         Laya.stage.addChild(GameMain.GameStart);
+        // 界面显示助力
+        if (GameMain.SHARE_ID && GameMain.SHARE_ID !== 'nothing') return GameMain.GameStart.showHelpPage();
         // 获取游戏配置
-        GameStart.getGameParams();    
+        GameStart.getGameParams();
         // 是否绑定手机号码
         if (GameMain.OPPEN_ID) {
             var mobile:InputMobile = new InputMobile();
@@ -131,8 +129,9 @@ class GameMain {
             url: API.INFO,
             data: { mark, win_info }
         }, data => {
-            GameStart.historyChanceNum = data.allTime;
+            GameStart.historyChanceNum = ~~data.allTime;
             GameStart.chanceNum = data.surplus_times;
+            GameMain.GameView && GameMain.GameView.updateChanceNum();
         })
     }
 }

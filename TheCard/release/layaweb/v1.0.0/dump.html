@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>跳转中...</title>
+<script>
+!function(){
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null)return  decodeURIComponent(r[2]);
+        return null;
+    }
+    var member_id = GetQueryString('member_id'),
+        href = location.protocol + '//' + location.hostname.replace(/^game\./, 'a.');
+    if (member_id) {
+        location = href + '/game/wx-web-login/' + member_id + '?url=' + encodeURIComponent(location.protocol + '//' + location.hostname.replace(/^a\./, 'game.') + location.pathname.replace(/dump\.html/, ''));
+        return;
+    }
+    location = href + '/game/wx-web-login/nothing?url=' + encodeURIComponent(location.protocol + '//' + location.hostname.replace(/^a\./, 'game.') + location.pathname.replace(/dump\.html/, ''));
+}();
+</script>

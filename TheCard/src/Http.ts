@@ -13,7 +13,7 @@ class Http {
                 alert(codeState[data.code] || data.code);
                 _err(JSON.parse(data));
             } else {
-                _complete(JSON.parse(data).data); 
+                _complete(JSON.parse(data).data || JSON.parse(data)); 
             }                     
         });
         xhr.once(Laya.Event.ERROR, this, this.errHandle);
@@ -24,7 +24,7 @@ class Http {
         }
         // _q += `token=${}`
         xhr.send(
-            'http://a.maixiaobu.com/game' + _params.url + _q, 
+            'http://' + API.HOST + '/game' + _params.url + _q, 
             // _params.data || '', 
             '',
             _params.type || 'get', 

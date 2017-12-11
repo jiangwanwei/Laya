@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":1,
-    "selecteID":7,
+    "selectedBox":15,
+    "selecteID":13,
     "props":{"width":640,"sceneColor":"#ff5529","height":1009},
     "nodeParent":-1,
     "label":"View",
@@ -151,7 +151,7 @@
                         {
                             "x":45,
                             "type":"Image",
-                            "props":{"y":50,"x":102,"skin":"ui/card_init.jpg","name":"card","anchorX":0.5},
+                            "props":{"y":50,"x":102,"width":150,"skin":"ui/card_init.jpg","name":"card","height":172,"anchorX":0.5},
                             "nodeParent":15,
                             "label":"Image(card)",
                             "isDirectory":false,

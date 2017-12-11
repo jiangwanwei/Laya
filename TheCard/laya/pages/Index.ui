@@ -1,8 +1,8 @@
 {
     "x":0,
     "type":"View",
-    "selectedBox":17,
-    "selecteID":36,
+    "selectedBox":1,
+    "selecteID":38,
     "props":{"width":640,"sceneColor":"#000000","sceneBg":"laya/views/Index.jpg","height":1009},
     "nodeParent":-1,
     "label":"View",
@@ -24,14 +24,15 @@
             "compId":13,
             "child":[
                 ],
-            "$LOCKED":true
+            "$LOCKED":true,
+            "$HIDDEN":false
         },
         {
             "x":15,
             "type":"Image",
-            "props":{"y":293,"x":0,"skin":"ui/gril.png"},
+            "props":{"y":293,"x":0,"var":"girl","skin":"ui/gril.png"},
             "nodeParent":1,
-            "label":"Image",
+            "label":"Image(girl)",
             "isDirectory":false,
             "isAniNode":true,
             "hasChild":false,
@@ -139,7 +140,8 @@
             "hasChild":false,
             "compId":12,
             "child":[
-                ]
+                ],
+            "$LOCKED":true
         },
         {
             "x":15,
@@ -186,17 +188,16 @@
         {
             "x":15,
             "type":"Image",
-            "props":{"y":116,"x":48,"width":568,"var":"my_award","skin":"ui/dialog-bg.png","height":847},
+            "props":{"y":116,"x":48,"width":568,"visible":true,"var":"my_award","skin":"ui/dialog-bg.png","height":847},
             "nodeParent":1,
             "label":"Image(my_award)",
-            "isOpen":true,
+            "isOpen":false,
             "isDirectory":true,
             "isAniNode":true,
             "hasChild":true,
             "compId":17,
             "child":[
                 {
-                    "x":30,
                     "type":"Image",
                     "props":{"y":49,"x":34,"skin":"ui/my-award-title.png"},
                     "nodeParent":17,
@@ -212,7 +213,6 @@
                     "$HIDDEN":false
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "props":{"y":729,"x":29,"skin":"ui/my-award-rule.png"},
                     "nodeParent":17,
@@ -227,7 +227,6 @@
                     "$HIDDEN":false
                 },
                 {
-                    "x":30,
                     "type":"Image",
                     "props":{"y":664,"x":119,"var":"shareTo","skin":"ui/my-award-btn.png"},
                     "nodeParent":17,
@@ -241,7 +240,6 @@
                     "$LOCKED":true
                 },
                 {
-                    "x":30,
                     "type":"Label",
                     "props":{"y":5,"x":512,"width":50,"var":"btn_close_award","styleSkin":"ui/label.png","height":54},
                     "nodeParent":17,
@@ -254,7 +252,6 @@
                         ]
                 },
                 {
-                    "x":30,
                     "type":"List",
                     "props":{"y":156,"x":36,"width":490,"var":"my_award_list","vScrollBarSkin":"ui/vscroll.png","spaceY":0,"repeatY":5,"height":478},
                     "nodeParent":17,
@@ -266,12 +263,11 @@
                     "compId":36,
                     "child":[
                         {
-                            "x":45,
                             "type":"Box",
                             "props":{"name":"render"},
                             "nodeParent":36,
                             "label":"Box(render)",
-                            "isOpen":false,
+                            "isOpen":true,
                             "isDirectory":true,
                             "isAniNode":false,
                             "hasChild":true,
@@ -330,7 +326,34 @@
                         }]
                 }],
             "$LOCKED":true,
-            "$HIDDEN":false
+            "$HIDDEN":true
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":307,"x":97,"visible":false,"var":"help_img","skin":"ui/help_img.png"},
+            "nodeParent":1,
+            "label":"Image(help_img)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "compId":37,
+            "child":[
+                ],
+            "$LOCKED":true
+        },
+        {
+            "x":15,
+            "type":"Image",
+            "props":{"y":877,"x":119,"visible":false,"var":"btn_help","skin":"ui/help_btn.png","mouseEnabled":true},
+            "nodeParent":1,
+            "label":"Image(btn_help)",
+            "isDirectory":false,
+            "isAniNode":true,
+            "hasChild":false,
+            "compId":38,
+            "child":[
+                ]
         }],
     "animations":[
         {
